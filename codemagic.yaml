@@ -3,3 +3,20 @@ workflows:
     name: Hello world workflow
     scripts:
       - echo "Hello World!"
+  first-build:
+    name: First build workflow
+    instance_type: linux
+    cache:
+      cache_paths:
+        - $HOME/.gradle/caches
+    environment:
+      java: 11.0.11
+    scripts:
+      - name: Run unit tests
+        script: ./gradlew test
+        test_report: app/build/reports/tests/*.xml
+      - name: Build Android APK
+        working_directory: android
+        script: ./gradlew assembleRelease
+    artifacts:
+      - app/build/outputs/apk/release/*.apk
